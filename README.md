@@ -60,4 +60,60 @@ Writing tests
 The actual assignment: for loop over te first number then see if te second is in the list
 Part 2: If you have the first number then you can put the second number in the function of the first part to find the other two numbers
 
+# Day 2 -- XOR
+
+During part two you needed an exclusive or operation.
+I thought it was a neat application for the nice symbols julia has for those operations
+
+```julia
+true ⊻ false
+```
+
+However later I realised that a simple unequal sign also works. Less cool, but neat in a different way.
+
+```julia
+true != false
+```
+
+
+# Day 3 -- Reading files...
+
+Actual problem was easy, reading was hard. Especially making actual and test input consistent.
+I've decided it's better to have consistency between test and real input rather than read in the actual input in the most efficient way.
+
+```julia
+input = read("../data/day_$DAY.txt", String)
+test_input = """<some multiline>\nstring"""
+```
+
+For actual parsing this days input grid into a 2dim array:
+
+```julia
+function parse_input(input::String)
+	lines = map(collect, split(input,"\n"))
+	grid = permutedims(hcat(lines...))
+	return grid .== '#'
+end
+```
+
+# Day 4 -- Input validation...
+
+I wish I knew how to do python's `f(*args)` in julia. below looks ugly:
+
+```julia
+all_valid(pair) = all([is_valid(t[1], t[2]) for t in pair])
+```
+
+I do like dot notatiaon versus list comprehensions in python though
+
+```python
+sum([square(x) for x in my_list])
+```
+
+```julia
+sum(square.(my_list))
+```
+
+...just wish I knew how to do this for a function of multiple arguments and a list of (kw)args.
+
 
