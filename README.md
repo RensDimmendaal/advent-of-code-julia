@@ -116,4 +116,74 @@ sum(square.(my_list))
 
 ...just wish I knew how to do this for a function of multiple arguments and a list of (kw)args.
 
+# Day 5 -- binary numbers
+
+I don't know much about this stuff, guess its because i never studied computer science.
+I solved the problem very naively with a `get_row` and `get_col` function using recursion.
+It was a fun solution to write, but horribly inefficient...and everybody says you shouldn't use recursion.
+On the julia zulip I saw that
+
+> 8 * (row string converted to 7 bit integer) + (column string converted to 3 bit integer) is the same as just converting the whole string to a 10 bit integer
+
+So I got to learn something new :-)
+
+binary numbers are like "regular numbers", except they stick a zero to the end when you reach 1 instead of 9.
+With regular numbers we go from 0 (zero) to 10 (ten) to 100 (hundred).
+With binary numbers we go from 0 (zero) to 10 (two) to 100 (four).
+Any easy way to count binary numbers is to go right to left, and keep doubling
+
+```
+"100" -> 0 * 1 =  0
+   ^
+"10 " -> 0 * 2 =  0
+  ^
+"1  " -> 1 * 4 =  4
+ ^
+===================== +
+                  4
+```
+
+So "100" in binary is 4
+
+```
+"1011" -> 1 * 1 =  1
+    ^  
+"101 " -> 1 * 2 =  2
+   ^
+"10  " -> 0 * 4 =  0
+  ^
+"10  " -> 1 * 4 =  8
+ ^  
+===================== +
+                  11
+```
+
+And "1011" in binary is 11. We can do that in julia like this:
+
+```julia
+parse(Int, "1011";base=2)
+```
+
+```julia
+pass2binary(pass::AbstractString) = join((c ∈ "BR")*1 for c in pass)
+pass2id(pass::AbstractString) = parse(Int, pass2bits(pass); base=2)
+maximum(pass2id.(input))
+```
+
+using an inline map makes it even shorter (also from zulip)
+
+```julia
+seatid(s) = parse(Int, map(c -> c ∈ ('R', 'B') ? '1' : '0', s), base = 2)
+```
+I like how it uses map, and this inline if-else structure.
+
+with some piping it's maybe even a bit more readable. I don't like having to use the anonymous function here, but the `_` character to signal which argument should be replaced.
+
+```julia
+# with pipe
+pipe_seatid(s) = (
+	map(c -> c ∈ ('R', 'B') ? '1' : '0', s) |>
+	s -> parse(Int, s; base=2)
+	)
+```
 
