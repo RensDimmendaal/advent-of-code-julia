@@ -21,7 +21,7 @@ add Pluto  # nice interactive programming environment
 
 # Day 1 -- Syntax
 
-A bit more setup 
+A bit more setup
 
 ```julia
 using AdventOfCode
@@ -147,13 +147,13 @@ So "100" in binary is 4
 
 ```
 "1011" -> 1 * 1 =  1
-    ^  
+    ^
 "101 " -> 1 * 2 =  2
    ^
 "10  " -> 0 * 4 =  0
   ^
 "10  " -> 1 * 4 =  8
- ^  
+ ^
 ===================== +
                   11
 ```
@@ -186,4 +186,63 @@ pipe_seatid(s) = (
 	s -> parse(Int, s; base=2)
 	)
 ```
+
+# Day 6 -- Args
+
+This was a simple day, but it allowed me to learn some more julia syntax. In previous days I was missing the convenience of python's `*args`, today I really needed it.
+
+In python putting a `*` before a container `*args` allows you to unpack a list, this is useful when they are to be used as a functions arguments.
+
+For example:
+
+```python
+items = (1,2,3)
+fun = lambda a,b,c : a*b+c
+fun*(items)
+>>>
+5
+```
+
+Today I learned that in julia you can do this with `...`, and that's pretty neat!
+
+```julia
+items = (1,2,3)
+fun(a,b,c) =  a*b+c
+fun(items...)
+>>>
+5
+```
+
+Combining this with vectorizing functions works a bit strange though:
+
+```julia
+items = [(1,2,3),(4,5,6)]
+fun(a,b,c) =  a*b+c
+fun.(items...)
+>>>
+MethodError
+```
+
+```julia
+items = [(1,2),(3,4),(5,6)]
+fun(a,b,c) =  a*b+c
+fun.(items...)
+>>>
+8, 14
+```
+
+So combining vectorization with unpacking takes the nth element of every tuple rather than unpack every tuple.
+
+Just like python, julia has a `zip` function, which flips the orientation of a nested list.
+
+```
+items = [(1,2,3),(4,5,6)]
+zipped_items = zip(items...)
+fun(a,b,c) =  a*b+c
+fun.(zipped_tems...)
+>>>
+5, 26
+```
+
+Right now I would have expected the behavior with zip and without to be the other way around. Maybe I'll learn the reason why it's like this someday :-)
 
