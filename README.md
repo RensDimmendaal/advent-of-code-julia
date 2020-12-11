@@ -246,3 +246,52 @@ fun.(zipped_tems...)
 
 Right now I would have expected the behavior with zip and without to be the other way around. Maybe I'll learn the reason why it's like this someday :-)
 
+### An online answer for inspiration
+
+```julia
+function part(data, f)
+    mapreduce(+, split(rstrip(data), "\n\n")) do s
+        split(s, "\n") .|> collect .|> Set |> x -> f(x...) |> length
+    end
+end
+
+let data = read("input.txt", String)
+    for (i, f) in enumerate((union, intersect))
+        println("Part ", i, ": ", part(data, f))
+    end
+end
+```
+
+vectorized pipe, mapreduce, enumerate...I like it.
+
+# Day 7 -- fail with queues / networks
+
+Thought I wanted to do this with graph networks, but the packages weren't so well documented for my taste. Many small different packages. Hard to just make a weighted directed network with string named nodes.
+Couldn't solve part2, so I went to zulip and found a very neat answer there...ohh well at least I learned how to work with queues...too tired to write it down though.
+
+# Day 8 -- IntCode flashbacks
+
+Used a mutable struct for the first time, adding the status of the program would have been even nicer.
+I'll do it if this we need to do another one of this exercises.
+
+```julia
+mutable struct State
+    total::Int
+    index::Int
+    used_codes::Array{Int,1}
+end
+```
+
+# Day 9 -- Always try the easy thing first
+
+Easy day if you don't overcomplicate it.
+
+
+# Day 10 -- Running helps
+
+Solved part 1, went for a run, solved part 2 while running, wrote it down after.
+I saw quite a lot of people were stuck on this one, I guess I got lucky.
+
+# Day 11 -- Game of life
+
+Learned about cartesian indices...but didn't get to a pretty solution for finding the nearest diagonal index that matches a condition.
